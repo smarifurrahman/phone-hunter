@@ -1,3 +1,5 @@
+const maxData = 9;
+
 const loadPhones = async (searchString, dataLimit) => {
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchString}`;
     const res = await fetch(url);
@@ -7,10 +9,10 @@ const loadPhones = async (searchString, dataLimit) => {
 
 const displayPhones = (phones, dataLimit) => {
     const phoneContainer = document.getElementById('phone-container');
-    // display 15 phone maximum
+    // display phone max
     const showAll = document.getElementById('show-all');
-    if (dataLimit && phones.length > 15) {
-        phones = phones.slice(0, 15);
+    if (dataLimit && phones.length > maxData) {
+        phones = phones.slice(0, maxData);
         showAll.classList.remove('d-none');
     }
     else {
@@ -70,12 +72,12 @@ const processSearch = (dataLimit = false) => {
 }
 
 document.getElementById('btn-search').addEventListener('click', function () {
-    processSearch(15);
+    processSearch(maxData);
 });
 
 document.getElementById('input-search').addEventListener('keyup', function (event) {
     if (event.key === 'Enter') {
-        processSearch(15);
+        processSearch(maxData);
     }
 });
 
@@ -101,14 +103,19 @@ const loadPhoneDetails = async (id) => {
 const displayPhoneDetails = (phone) => {
     const modalContainer = document.getElementById('detailsModalLabel');
     modalContainer.innerText = `${phone.name}`;
+
+    // let allSensor = phone.mainFeatures.sensors.reduce((previous, current) => previous + current + ', ', '');
+    // allSensor = allSensor.split('').slice(0, -2).join('');
+    let allSensor = phone.mainFeatures.sensors ? phone.mainFeatures.sensors.join(', ') : 'No sensor found';
+
     const modalBody = document.getElementById('modal-body');
     modalBody.innerHTML = `
-        <p>Release Date: ${phone.releaseDate ? phone.releaseDate : 'No Release Date Found'}</p>
-        <p>Storage: ${phone.mainFeatures.storage}</p>
-        <p>Display Size: ${phone.mainFeatures.displaySize}</p>
-        <p>Chip Set: ${phone.mainFeatures.chipSet}</p>
-        <p>Memory: ${phone.mainFeatures.memory}</p>
+        <p><span class="fw-semibold">Release Date: </span>${phone.releaseDate ? phone.releaseDate : 'No Release Date Found'}</p>
+        <p><span class="fw-semibold">Display Size: </span>${phone.mainFeatures.displaySize}</p>
+        <p><span class="fw-semibold">Memory: </span>${phone.mainFeatures.memory}</p>
+        <p><span class="fw-semibold">Chipset: </span>${phone.mainFeatures.chipSet}</p>
+        <p><span class="fw-semibold">Sensors: </span>${allSensor}</p>
     `;
 }
 
-loadPhones('apple');
+processSearch(maxData);
