@@ -83,52 +83,32 @@ document.getElementById('btn-show-all').addEventListener('click', function () {
     processSearch();
 });
 
+const emptyModalInfo = () => {
+    const modalContainer = document.getElementById('detailsModalLabel');
+    modalContainer.innerText = 'Loading...';
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = `<p>Loading...</p>`;
+}
 
 const loadPhoneDetails = async (id) => {
+    emptyModalInfo();
     const url = `https://openapi.programming-hero.com/api/phone/${id}`;
     const res = await fetch(url);
     const data = await res.json();
     displayPhoneDetails(data.data);
 }
 
-const displayPhoneDetails = async (phone) => {
-    const modalContainer = document.getElementById('show-details-container');
-    modalContainer.innerHTML = `
-        <!-- Modal -->
-        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="detailsModalLabel">${phone.name}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div id="modal-body" class="modal-body">
-                        <p>Release Date: ${phone.releaseDate ? phone.releaseDate : 'No Release Date Found'}</p>
-                        <p>Storage: ${phone.mainFeatures.storage}</p>
-                        <p>Display Size: ${phone.mainFeatures.displaySize}</p>
-                        <p>Chip Set: ${phone.mainFeatures.chipSet}</p>
-                        <p>Memory: ${phone.mainFeatures.memory}</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+const displayPhoneDetails = (phone) => {
+    const modalContainer = document.getElementById('detailsModalLabel');
+    modalContainer.innerText = `${phone.name}`;
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = `
+        <p>Release Date: ${phone.releaseDate ? phone.releaseDate : 'No Release Date Found'}</p>
+        <p>Storage: ${phone.mainFeatures.storage}</p>
+        <p>Display Size: ${phone.mainFeatures.displaySize}</p>
+        <p>Chip Set: ${phone.mainFeatures.chipSet}</p>
+        <p>Memory: ${phone.mainFeatures.memory}</p>
     `;
 }
-
-// const displayPhoneDetails2 = (phone) => {
-//     const modalContainer = document.getElementById('detailsModalLabel');
-//     modalContainer.innerText = `${phone.name}`;
-//     const modalBody = document.getElementById('modal-body');
-//     modalBody.innerHTML = `
-//         <p>Release Date: ${phone.releaseDate ? phone.releaseDate : 'No Release Date Found'}</p>
-//         <p>Storage: ${phone.mainFeatures.storage}</p>
-//         <p>Display Size: ${phone.mainFeatures.displaySize}</p>
-//         <p>Chip Set: ${phone.mainFeatures.chipSet}</p>
-//         <p>Memory: ${phone.mainFeatures.memory}</p>
-//     `;
-// }
 
 loadPhones('apple');
